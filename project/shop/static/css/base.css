@@ -73,7 +73,15 @@ table.cart {
 }
 
 table.cart img {
-    width:180px;
+    width:100px;
+}
+
+table.cart .product-link {
+    display: flex;
+    align-items: center;
+}
+table.cart .product-link img {
+    margin-right: 10px;
 }
 
 tbody td.num {

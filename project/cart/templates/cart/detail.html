@@ -1,0 +1,50 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}Корзина{% endblock %}
+{% block content %}
+<h1>Your shopping cart</h1>
+<table class="cart">
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>Кол-во</th>
+            <th>Удалить</th>
+            <th>Стоимость</th>
+            <th>Итого</th>
+        </tr>
+    </thead>
+<tbody>
+{% for item in cart %}
+{% with product=item.product %}
+<tr>
+    <td>
+        <a href="{{ product.get_absolute_url }}">
+            <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
+            {{ product.name }}
+        </a>
+    </td>
+    <td>{{ item.quantity }}</td>
+    <td>
+        <form action="{% url "cart:cart_remove" product.id %}" method="post">
+            <input type="submit" value="X">
+            {% csrf_token %}
+        </form>
+    </td>
+    <td class="num">{{ item.price }} руб.</td>
+    <td class="num">${{ item.total_price }} руб.</td>
+</tr>
+{% endwith %}
+{% endfor %}
+<tr class="total">
+    <td>Итого</td>
+    <td colspan="4"></td>428 Разработка интернет-магазина
+    <td class="num">${{ cart.get_total_price }}</td>
+</tr>
+</tbody>
+</table>
+<p class="text-right">
+    <a href="{% url "shop:product_list" %}" class="button
+    light">Продолжить покупки</a>
+    <a href="#" class="button">Оформить заказ</a>
+</p>
+{% endblock %}

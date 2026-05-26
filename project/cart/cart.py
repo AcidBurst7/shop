@@ -28,6 +28,9 @@ class Cart:
             yield item
 
     def __len__(self):
+        """
+        Подсчитать все товарные позиции в корзине
+        """
         return sum(item['quantity'] for item in self.cart.values())
     
     def get_total_price(self):

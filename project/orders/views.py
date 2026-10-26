@@ -19,7 +19,7 @@ def order_create(request):
                     quantity=item['quantity']
                 )
             cart.clear()
-            order_created(order.id)
+            order_created.delay(order.id)
         else:
             form = OrderCreateForm()
         return render(

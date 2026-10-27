@@ -1,5 +1,6 @@
 import csv
 import datetime
+from urllib.parse import quote
 from django.http import HttpResponse
 from django.contrib import admin
 from django.utils.safestring import mark_safe
@@ -15,8 +16,9 @@ order_stripe_payment.short_description = 'Stripe'
 
 def export_to_csv(modeladmin, request, queryset):
     opts = modeladmin.model._meta
+    encoded_filename = quote(f"{opts.verbose_name_plural}.csv")
     content_disposition = (
-        f'attachment; filename={opts.verbose_name}.csv'
+        f"attachment; filename*=utf-8''{encoded_filename}"
     )
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = content_disposition
@@ -36,7 +38,6 @@ def export_to_csv(modeladmin, request, queryset):
             data_row.append(value)
         writer.writerow(data_row)
     return response
-
 export_to_csv.short_description = 'Экспорт в .csv'
 
 class OrderItemInline(admin.TabularInline):

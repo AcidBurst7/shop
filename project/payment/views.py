@@ -32,8 +32,8 @@ def payment_process(request):
             session_data['line_items'].append(
                 {
                     'price_data': {
-                        'unit_amount': int(item.price),
-                        'currency': 'rub',
+                        'unit_amount': int(item.price * 100),
+                        'currency': 'RUB',
                         'product_data': {
                             'name': item.product.name,
                         },

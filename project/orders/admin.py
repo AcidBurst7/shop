@@ -21,9 +21,9 @@ def order_detail(obj):
 
 def export_to_csv(modeladmin, request, queryset):
     opts = modeladmin.model._meta
-    encoded_filename = quote(f"{opts.verbose_name_plural}.csv")
+    filename = quote(f"{opts.verbose_name_plural}.csv")
     content_disposition = (
-        f"attachment; filename*=utf-8''{encoded_filename}"
+        f"attachment; filename*=utf-8''{filename}"
     )
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = content_disposition
@@ -45,6 +45,11 @@ def export_to_csv(modeladmin, request, queryset):
     return response
 export_to_csv.short_description = 'Экспорт в .csv'
 
+def order_detail_pdf(obj):
+    url = reverse('orders:admin_order_pdf', args=[obj.id])
+    return mark_safe(f'<a href="{url}">pdf</a>')
+order_detail_pdf.short_description = 'Заказ'
+
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     raw_id_fields = ['product']
@@ -63,7 +68,8 @@ class OrderAdmin(admin.ModelAdmin):
         order_stripe_payment,
         'created',
         'updated',
-        order_detail
+        order_detail,
+        order_detail_pdf
     ]
     actions = [export_to_csv]
     list_filter = ['paid', 'created', 'updated']

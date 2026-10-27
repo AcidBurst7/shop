@@ -3,6 +3,20 @@
 import os
 import sys
 
+# Добавляем путь к DLL прямо в системный PATH текущего процесса Python
+msys_path = r'C:\\msys64\\mingw64\\bin'
+if msys_path not in os.environ['PATH']:
+    os.environ['PATH'] = msys_path + os.pathsep + os.environ['PATH']
+
+# Явный флаг для WeasyPrint
+os.environ['WEASYPRINT_DLL_DIRECTORIES'] = msys_path
+
+# Для Python 3.8+ на Windows нужно явно разрешить загрузку DLL из этой папки
+if sys.platform == 'win32' and hasattr(os, 'add_dll_directory'):
+    try:
+        os.add_dll_directory(msys_path)
+    except FileNotFoundError:
+        pass
 
 def main():
     """Run administrative tasks."""

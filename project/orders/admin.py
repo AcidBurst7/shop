@@ -4,6 +4,7 @@ from urllib.parse import quote
 from django.http import HttpResponse
 from django.contrib import admin
 from django.utils.safestring import mark_safe
+from django.urls import reverse
 from .models import Order, OrderItem
 
 def order_stripe_payment(obj):
@@ -13,6 +14,10 @@ def order_stripe_payment(obj):
         return mark_safe(html)
     return ''
 order_stripe_payment.short_description = 'Stripe'
+
+def order_detail(obj):
+    url = reverse('orders:admin_order_detail', args=[obj.id])
+    return mark_safe(f'<a href="{url}">Посмотреть</a>')
 
 def export_to_csv(modeladmin, request, queryset):
     opts = modeladmin.model._meta
@@ -58,6 +63,7 @@ class OrderAdmin(admin.ModelAdmin):
         order_stripe_payment,
         'created',
         'updated',
+        order_detail
     ]
     actions = [export_to_csv]
     list_filter = ['paid', 'created', 'updated']
